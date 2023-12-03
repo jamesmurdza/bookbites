@@ -1,0 +1,7 @@
+openai
+pillar-youtube-upload
+dotenv
+moviepy
+python-dotenv
+requests
+tempfile
