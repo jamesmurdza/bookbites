@@ -19,30 +19,19 @@ else:
 # Make a request to OpenAI's chat endpoint
 print("Generating text...")
 client = OpenAI(api_key=os.environ.get("OPENAI_API_KEY"))
-if len(title):
-    prompt = (
-        "Please summarize "
-        + title
-        + ". Give a down to earth but objective lecture. Include background and importance of the work. Write in paragraphs, and give each paragraph a title."
-    )
-else:
-    prompt = "Tell me I'm amazing."
+prompt = f"Please summarize {title}. Give a down to earth but objective lecture. Include background and importance of the work. Write in paragraphs, and give each paragraph a title."
 chat_completion = client.chat.completions.create(
     messages=[{"role": "user", "content": prompt}],
     model="gpt-4-1106-preview",
 )
+# Remove any Markdown formatting
 summary = re.sub(
     r"([*_`~]|#{1,6} |\[(.*?)\]\(.*?\))", "", chat_completion.choices[0].message.content
 )
 
-if len(title):
-    prompt = (
-        "Make a short list of five keywords for the book "
-        + title
-        + " separated by commas."
-    )
-else:
-    prompt = "Make a short list of five keywords separated by commas."
+prompt = (
+    "Make a short list of five keywords for the book " + title + " separated by commas."
+)
 chat_completion = client.chat.completions.create(
     messages=[{"role": "user", "content": prompt}],
     model="gpt-3.5-turbo",
@@ -74,7 +63,8 @@ with open(output_dir + "/" + generation_id + ".json", "w") as file:
 
 # Make a request to ElevenLab's text-to-speech endpoint
 print("Generating audio...")
-url = "https://api.elevenlabs.io/v1/text-to-speech/flq6f7yk4E4fJM5XTYuZ"  # Michael
+voice = "flq6f7yk4E4fJM5XTYuZ"  # Michael
+url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice}"
 payload = {"text": summary}
 headers = {
     "Accept": "audio/mpeg",

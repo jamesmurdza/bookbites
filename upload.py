@@ -4,12 +4,12 @@ from youtube_upload.client import YoutubeUploader
 
 
 def upload_video(video_path, json_path):
-    uploader = YoutubeUploader()
-    uploader.authenticate()
-
     with open(json_path, "r") as json_file:
         video_info = json.load(json_file)
 
+    # Upload the video to YouTube
+    uploader = YoutubeUploader()
+    uploader.authenticate()
     options = {
         "title": "Summary of " + video_info["title"],
         "description": video_info["description"],
@@ -17,7 +17,6 @@ def upload_video(video_path, json_path):
         "privacyStatus": "private",
         "kids": False,
     }
-
     uploader.upload(video_path, options)
 
 
